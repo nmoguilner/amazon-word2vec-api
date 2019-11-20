@@ -1,6 +1,7 @@
 from gensim.models import Word2Vec
 import Helpers
 import AmazonGetSingleProduct
+import AmazonModelEpochLogger
 
 asin_title_dict = None
 model = None

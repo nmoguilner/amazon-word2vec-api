@@ -31,13 +31,16 @@ def save_list_to_file(list, path):
 
 
 def remove_all_from_folder(path):
-    for the_file in os.listdir(path):
-        file_path = os.path.join(path, the_file)
-        try:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
-        except Exception as e:
-            print(e)
+    if os.path.exists(path):
+        for the_file in os.listdir(path):
+            file_path = os.path.join(path, the_file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+            except Exception as e:
+                print(e)
+    else:
+        os.mkdir(path)
 
 
 def load_json_dict(path):

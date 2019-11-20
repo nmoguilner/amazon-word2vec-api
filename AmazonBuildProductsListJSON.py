@@ -3,14 +3,18 @@ import json
 import numpy as np
 import pandas as pd
 from functools import reduce
+import time
 
+start_time = time.time()
 
 asin_title_dict = Helpers.load_json_dict('data/Preprocessed/asin_title_dict/asin_title_dict.json')
 
 metadata_files = [
     'meta_Electronics.json.gz',
     'meta_Musical_Instruments.json.gz',
-    'meta_Movies_and_TV.json.gz'
+    'meta_Movies_and_TV.json.gz',
+    'meta_Grocery_and_Gourmet_Food.json.gz',
+    'meta_Home_and_Kitchen.json.gz'
 ]
 
 full_metadata_df = pd.DataFrame()
@@ -39,3 +43,7 @@ categories_dict = reduce(Helpers.merge_dicts, categories_dict_list)
 
 with open('static/data/categories.json', 'w') as fp:
     json.dump(categories_dict, fp)
+
+elapsed_time = time.time() - start_time
+with open('data/Preprocessed/elapsed_time_log', 'a') as f:
+    f.write("Building ProductsListJSON: %d s. (%d min)\n" % (elapsed_time, elapsed_time/60))

@@ -1,0 +1,14 @@
+#!/bin/bash
+import AmazonPreprocessMultiple
+import AmazonBuildSentences
+import AmazonBuildProductsListJSON
+import AmazonTrain
+import AmazonWord2VecToTensorboard
+import app
+
+AmazonPreprocessMultiple.py
+AmazonBuildSentences.py
+AmazonBuildProductsListJSON.py
+AmazonTrain.py
+AmazonWord2VecToTensorboard.py
+app.py

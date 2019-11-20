@@ -7,7 +7,9 @@ import pandas as pd
 metadata_files = [
     'meta_Electronics.json.gz',
     'meta_Musical_Instruments.json.gz',
-    'meta_Movies_and_TV.json.gz'
+    'meta_Movies_and_TV.json.gz',
+    'meta_Grocery_and_Gourmet_Food.json.gz',
+    'meta_Home_and_Kitchen.json.gz'
 ]
 
 

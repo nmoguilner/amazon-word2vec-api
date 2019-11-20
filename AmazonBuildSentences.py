@@ -2,7 +2,7 @@ import pandas as pd
 from pandas.io.json import json_normalize
 import ast
 import json
-
+import time
 import Helpers
 
 # pandas display config
@@ -10,11 +10,15 @@ pd.set_option('display.max_columns', 20)
 pd.set_option('display.max_colwidth', 1000)
 pd.set_option('display.width', 10000)
 
+start_time = time.time()
+csv_path = 'data/Datasets/merged_amazon_meta_reviews.csv'
+
 chunksize = 100000
 asin_title_dict = dict()
 
 start = 0
 end = chunksize
+total_rows = sum(1 for line in open(csv_path))
 
 
 # remove keys which are not in dict and collections with length < 2. lists are mutable, pass by ref
@@ -41,7 +45,7 @@ def clean_flattened_collection(flattened_collection):
 
 
 def process(chunk, start, end):
-    print('start processing batch from %d to %d' % (start, end))
+    print('start processing batch from %d to %d - Remaining: %d rows' % (start, end, total_rows - end))
     size = len(chunk)
 
     meta_reviews = chunk.loc[:, ~chunk.columns.str.contains('^Unnamed')].dropna()  # remove unnamed columns
@@ -134,7 +138,7 @@ def process(chunk, start, end):
     del chunk
     del meta_reviews
 
-    print('processing batch from %d to %d finished!' % (start, end))
+    print('processing batch from %d to %d finished.' % (start, end))
     return start, end
 
 
@@ -145,10 +149,18 @@ Helpers.remove_all_from_folder('data/Preprocessed/buy_after_viewing/')
 Helpers.remove_all_from_folder('data/Preprocessed/by_categories/')
 Helpers.remove_all_from_folder('data/Preprocessed/by_reviewer_id/')
 
-for chunk in pd.read_csv('data/Datasets/merged_amazon_meta_reviews.csv', chunksize=chunksize,
+print('Total rows to process: %d' % total_rows)
+for chunk in pd.read_csv(csv_path, chunksize=chunksize,
                          dtype={"reviewerID": str, "asin": str, "overall": float, "title": str, "categories": str,
                                 "related": str}):
     start, end = process(chunk, start, end)
 
 with open('data/Preprocessed/asin_title_dict/asin_title_dict.json', 'w') as fp:
     json.dump(asin_title_dict, fp)
+
+elapsed_time = time.time() - start_time
+print('Building sentences finished. Elapsed time: %d s.' % elapsed_time)
+
+with open('data/Preprocessed/elapsed_time_log', 'a') as f:
+    f.write("Building sentences: %d s. (%d min)\n" % (elapsed_time, elapsed_time/60))
+

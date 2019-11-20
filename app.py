@@ -6,6 +6,7 @@ import os
 import json
 import AmazonLoadModel
 import AmazonGetSingleProduct
+import AmazonModelEpochLogger
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})  # remove cors issue with localhost
